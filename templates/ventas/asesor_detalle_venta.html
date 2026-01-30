@@ -1,0 +1,147 @@
+{% extends 'base.html' %} {% block title %}Detalle Venta #{{ venta.id }} - JARD
+Digital{% endblock %} {% block content %}
+<div class="container">
+  <div class="row mb-3">
+    <div class="col-12">
+      <a href="{% url 'ventas:asesor_mis_ventas' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a Mis Ventas
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">
+            <i class="bi bi-file-text"></i> Venta #{{ venta.id }} {% if
+            venta.estado == 'INSTALADA' %}
+            <span class="badge bg-success float-end"
+              >{{ venta.get_estado_display }}</span
+            >
+            {% elif venta.estado == 'RECHAZADA' %}
+            <span class="badge bg-danger float-end"
+              >{{ venta.get_estado_display }}</span
+            >
+            {% elif venta.estado == 'PENDIENTE_BO' %}
+            <span class="badge bg-warning float-end"
+              >{{ venta.get_estado_display }}</span
+            >
+            {% else %}
+            <span class="badge bg-info float-end"
+              >{{ venta.get_estado_display }}</span
+            >
+            {% endif %}
+          </h4>
+        </div>
+        <div class="card-body">
+          <!-- Datos del Cliente -->
+          <h5 class="border-bottom pb-2 mb-3">
+            <i class="bi bi-person"></i> Información del Cliente
+          </h5>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-sm-5">Nombre:</dt>
+                <dd class="col-sm-7">{{ venta.cliente_nombre }}</dd>
+
+                <dt class="col-sm-5">DNI:</dt>
+                <dd class="col-sm-7">{{ venta.cliente_dni }}</dd>
+
+                <dt class="col-sm-5">Teléfono:</dt>
+                <dd class="col-sm-7">{{ venta.cliente_telefono }}</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-sm-5">Género:</dt>
+                <dd class="col-sm-7">{{ venta.get_cliente_genero_display }}</dd>
+
+                <dt class="col-sm-5">Dirección:</dt>
+                <dd class="col-sm-7">{{ venta.cliente_direccion }}</dd>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Producto/Servicio -->
+          <h5 class="border-bottom pb-2 mb-3">
+            <i class="bi bi-box"></i> Producto/Servicio
+          </h5>
+          <div class="row mb-4">
+            <div class="col-md-8">
+              <dl class="row">
+                <dt class="col-sm-4">Producto:</dt>
+                <dd class="col-sm-8">{{ venta.producto_servicio }}</dd>
+
+                <dt class="col-sm-4">Monto:</dt>
+                <dd class="col-sm-8">
+                  <strong class="text-success">S/ {{ venta.monto }}</strong>
+                </dd>
+              </dl>
+            </div>
+          </div>
+
+          {% if venta.observaciones %}
+          <div class="alert alert-info">
+            <strong>Observaciones:</strong><br />
+            {{ venta.observaciones }}
+          </div>
+          {% endif %}
+
+          <!-- Datos de Back Office -->
+          {% if venta.sec or venta.sot or venta.fecha_instalacion_programada %}
+          <h5 class="border-bottom pb-2 mb-3">
+            <i class="bi bi-clipboard-check"></i> Datos de Back Office
+          </h5>
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-sm-4">SEC:</dt>
+                <dd class="col-sm-8">{{ venta.sec|default:"-" }}</dd>
+
+                <dt class="col-sm-4">SOT:</dt>
+                <dd class="col-sm-8">{{ venta.sot|default:"-" }}</dd>
+              </dl>
+            </div>
+            <div class="col-md-6">
+              <dl class="row">
+                <dt class="col-sm-6">Fecha Instalación:</dt>
+                <dd class="col-sm-6">
+                  {% if venta.fecha_instalacion_programada %}
+                  <span class="badge bg-primary"
+                    >{{ venta.fecha_instalacion_programada|date:"d/m/Y" }}</span
+                  >
+                  {% else %} - {% endif %}
+                </dd>
+              </dl>
+            </div>
+          </div>
+          {% endif %} {% if venta.estado == 'RECHAZADA' and venta.motivo_rechazo
+          %}
+          <div class="alert alert-danger">
+            <strong><i class="bi bi-x-circle"></i> Motivo de Rechazo:</strong
+            ><br />
+            {{ venta.motivo_rechazo }}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline / Historial -->
+    <div class="col-lg-4">
+      <div class="card shadow">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0"><i class="bi bi-clock-history"></i> Historial</h5>
+        </div>
+        <div class="card-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="badge bg-primary">Registrada</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

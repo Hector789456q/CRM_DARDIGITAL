@@ -1,0 +1,226 @@
+{% extends 'base.html' %} {% block title %}Mis Ventas - JARD Digital{% endblock
+%} {% block content %}
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2><i class="bi bi-list-ul"></i> Mis Ventas</h2>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <div class="col-md-3">
+          <label class="form-label">Estado</label>
+          <select name="estado" class="form-select">
+            <option value="">Todos</option>
+            {% for key, value in estados %}
+            <option
+              value="{{ key }}"
+              {%
+              if
+              filtros.estado=""
+              ="key"
+              %}selected{%
+              endif
+              %}
+            >
+              {{ value }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Desde</label>
+          <input
+            type="date"
+            name="fecha_desde"
+            class="form-control"
+            value="{{ filtros.fecha_desde }}"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Hasta</label>
+          <input
+            type="date"
+            name="fecha_hasta"
+            class="form-control"
+            value="{{ filtros.fecha_hasta }}"
+          />
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Buscar</label>
+          <input
+            type="text"
+            name="buscar"
+            class="form-control"
+            placeholder="Cliente, DNI, teléfono..."
+            value="{{ filtros.buscar }}"
+          />
+        </div>
+
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i> Filtrar
+          </button>
+          <a
+            href="{% url 'ventas:asesor_mis_ventas' %}"
+            class="btn btn-secondary"
+          >
+            <i class="bi bi-x-circle"></i> Limpiar
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tabla de Ventas -->
+  <div class="card">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Total: {{ ventas.paginator.count }} venta(s)</h5>
+    </div>
+    <div class="card-body p-0">
+      {% if ventas %}
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>DNI</th>
+              <th>Teléfono</th>
+              <th>Producto</th>
+              <th>Monto</th>
+              <th>Estado</th>
+              <th>Fecha Registro</th>
+              <th>Fecha Instalación</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for venta in ventas %}
+            <tr>
+              <td><strong>{{ venta.id }}</strong></td>
+              <td>{{ venta.cliente_nombre }}</td>
+              <td>{{ venta.cliente_dni }}</td>
+              <td>{{ venta.cliente_telefono }}</td>
+              <td>{{ venta.producto_servicio }}</td>
+              <td>S/ {{ venta.monto }}</td>
+              <td>
+                {% if venta.estado == 'PENDIENTE_BO' %}
+                <span class="badge bg-warning text-dark"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% elif venta.estado == 'PENDIENTE_AUDIO' %}
+                <span class="badge bg-info"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% elif venta.estado == 'PENDIENTE_INSTALACION' %}
+                <span class="badge bg-primary"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% elif venta.estado == 'INSTALADA' %}
+                <span class="badge bg-success"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% elif venta.estado == 'RECHAZADA' %}
+                <span class="badge bg-danger"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% else %}
+                <span class="badge bg-secondary"
+                  >{{ venta.get_estado_display }}</span
+                >
+                {% endif %}
+              </td>
+              <td>{{ venta.fecha_creacion|date:"d/m/Y H:i" }}</td>
+              <td>
+                {% if venta.fecha_instalacion_programada %} {{
+                venta.fecha_instalacion_programada|date:"d/m/Y" }} {% else %}
+                <span class="text-muted">-</span>
+                {% endif %}
+              </td>
+              <td>
+                <a
+                  href="{% url 'ventas:asesor_detalle_venta' venta.id %}"
+                  class="btn btn-sm btn-outline-primary"
+                  title="Ver detalle"
+                >
+                  <i class="bi bi-eye"></i>
+                </a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Paginación -->
+      {% if ventas.has_other_pages %}
+      <div class="card-footer">
+        <nav>
+          <ul class="pagination justify-content-center mb-0">
+            {% if ventas.has_previous %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page=1{% if filtros.estado %}&estado={{ filtros.estado }}{% endif %}"
+                >Primera</a
+              >
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ ventas.previous_page_number }}{% if filtros.estado %}&estado={{ filtros.estado }}{% endif %}"
+                >Anterior</a
+              >
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+              <span class="page-link"
+                >{{ ventas.number }} de {{ ventas.paginator.num_pages }}</span
+              >
+            </li>
+
+            {% if ventas.has_next %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ ventas.next_page_number }}{% if filtros.estado %}&estado={{ filtros.estado }}{% endif %}"
+                >Siguiente</a
+              >
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ ventas.paginator.num_pages }}{% if filtros.estado %}&estado={{ filtros.estado }}{% endif %}"
+                >Última</a
+              >
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+      </div>
+      {% endif %} {% else %}
+      <div class="text-center py-5 text-muted">
+        <i class="bi bi-inbox" style="font-size: 3rem"></i>
+        <p class="mt-3">
+          No se encontraron ventas con los filtros seleccionados
+        </p>
+        <a
+          href="{% url 'ventas:asesor_crear_venta' %}"
+          class="btn btn-primary mt-2"
+        >
+          <i class="bi bi-plus-circle"></i> Registrar Nueva Venta
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
