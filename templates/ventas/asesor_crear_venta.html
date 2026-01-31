@@ -14,132 +14,120 @@
             {% csrf_token %}
 
             <!-- Información de Trabajo -->
-            <div class="mb-4">
-              <h5 class="border-bottom pb-2">
-                <i class="bi bi-briefcase"></i> Información de Trabajo
-              </h5>
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Modalidad *</label>
-                  {% render_field form.modalidad class="form-control" %} {% if
-                  form.modalidad.errors %}
-                  <div class="text-danger small">
-                    {{ form.modalidad.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Turno *</label>
-                  {% render_field form.turno class="form-control" %} {% if
-                  form.turno.errors %}
-                  <div class="text-danger small">{{ form.turno.errors }}</div>
-                  {% endif %}
-                </div>
+            <h5 class="border-bottom pb-2 mb-3">
+              <i class="bi bi-briefcase"></i> Información de Trabajo
+            </h5>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Modalidad *</label>
+                {% render_field form.modalidad class="form-control" %} {% if
+                form.modalidad.errors %}
+                <div class="text-danger small">{{ form.modalidad.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Turno *</label>
+                {% render_field form.turno class="form-control" %} {% if
+                form.turno.errors %}
+                <div class="text-danger small">{{ form.turno.errors }}</div>
+                {% endif %}
               </div>
             </div>
 
             <!-- Datos del Cliente -->
-            <div class="mb-4">
-              <h5 class="border-bottom pb-2">
-                <i class="bi bi-person"></i> Datos del Cliente
-              </h5>
-              <div class="row">
-                <div class="col-md-8 mb-3">
-                  <label class="form-label">Nombre Completo *</label>
-                  {% render_field form.cliente_nombre class="form-control" %} {%
-                  if form.cliente_nombre.errors %}
-                  <div class="text-danger small">
-                    {{ form.cliente_nombre.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">DNI *</label>
-                  {% render_field form.cliente_dni class="form-control" %} {% if
-                  form.cliente_dni.errors %}
-                  <div class="text-danger small">
-                    {{ form.cliente_dni.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Teléfono *</label>
-                  {% render_field form.cliente_telefono class="form-control" %}
-                  {% if form.cliente_telefono.errors %}
-                  <div class="text-danger small">
-                    {{ form.cliente_telefono.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="col-md-6 mb-3">
-                  <label class="form-label">Género *</label>
-                  {% render_field form.cliente_genero class="form-control" %} {%
-                  if form.cliente_genero.errors %}
-                  <div class="text-danger small">
-                    {{ form.cliente_genero.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Dirección *</label>
-                {% render_field form.cliente_direccion class="form-control"
-                rows="2" %} {% if form.cliente_direccion.errors %}
+            <h5 class="border-bottom pb-2 mb-3 mt-4">
+              <i class="bi bi-person"></i> Datos del Cliente
+            </h5>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label">Nombre Completo *</label>
+                {% render_field form.cliente_nombre class="form-control" %} {%
+                if form.cliente_nombre.errors %}
                 <div class="text-danger small">
-                  {{ form.cliente_direccion.errors }}
+                  {{ form.cliente_nombre.errors }}
                 </div>
                 {% endif %}
               </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">DNI *</label>
+                {% render_field form.cliente_dni class="form-control" %} {% if
+                form.cliente_dni.errors %}
+                <div class="text-danger small">
+                  {{ form.cliente_dni.errors }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Teléfono *</label>
+                {% render_field form.cliente_telefono class="form-control" %} {%
+                if form.cliente_telefono.errors %}
+                <div class="text-danger small">
+                  {{ form.cliente_telefono.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Género *</label>
+                {% render_field form.cliente_genero class="form-control" %} {%
+                if form.cliente_genero.errors %}
+                <div class="text-danger small">
+                  {{ form.cliente_genero.errors }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Dirección *</label>
+              {% render_field form.cliente_direccion class="form-control"
+              rows="2" %} {% if form.cliente_direccion.errors %}
+              <div class="text-danger small">
+                {{ form.cliente_direccion.errors }}
+              </div>
+              {% endif %}
             </div>
 
             <!-- Producto y Monto -->
-            <div class="mb-4">
-              <h5 class="border-bottom pb-2">
-                <i class="bi bi-box"></i> Producto/Servicio
-              </h5>
-              <div class="row">
-                <div class="col-md-8 mb-3">
-                  <label class="form-label">Producto/Servicio *</label>
-                  {% render_field form.producto_servicio class="form-control" %}
-                  {% if form.producto_servicio.errors %}
-                  <div class="text-danger small">
-                    {{ form.producto_servicio.errors }}
-                  </div>
-                  {% endif %}
-                </div>
-                <div class="col-md-4 mb-3">
-                  <label class="form-label">Monto (S/) *</label>
-                  {% render_field form.monto class="form-control" %} {% if
-                  form.monto.errors %}
-                  <div class="text-danger small">{{ form.monto.errors }}</div>
-                  {% endif %}
-                </div>
-              </div>
-
-              <div class="mb-3">
-                <label class="form-label">Observaciones</label>
-                {% render_field form.observaciones class="form-control" rows="3"
-                %} {% if form.observaciones.errors %}
+            <h5 class="border-bottom pb-2 mb-3 mt-4">
+              <i class="bi bi-box"></i> Producto/Servicio
+            </h5>
+            <div class="row">
+              <div class="col-md-8 mb-3">
+                <label class="form-label">Producto/Servicio *</label>
+                {% render_field form.producto_servicio class="form-control" %}
+                {% if form.producto_servicio.errors %}
                 <div class="text-danger small">
-                  {{ form.observaciones.errors }}
+                  {{ form.producto_servicio.errors }}
                 </div>
+                {% endif %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Monto (S/.) *</label>
+                {% render_field form.monto class="form-control" %} {% if
+                form.monto.errors %}
+                <div class="text-danger small">{{ form.monto.errors }}</div>
                 {% endif %}
               </div>
             </div>
 
+            <div class="mb-3">
+              <label class="form-label">Observaciones</label>
+              {% render_field form.observaciones class="form-control" rows="3"
+              %}
+            </div>
+
             <!-- Botones -->
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between mt-4">
               <a
                 href="{% url 'ventas:asesor_dashboard' %}"
                 class="btn btn-secondary"
               >
                 <i class="bi bi-arrow-left"></i> Cancelar
               </a>
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-primary btn-lg">
                 <i class="bi bi-save"></i> Registrar Venta
               </button>
             </div>

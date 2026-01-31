@@ -1,0 +1,193 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block title %}Completar
+Venta #{{ venta.id }} - JARD Digital{% endblock %} {% block content %}
+<div class="container">
+  <!-- Botón Volver -->
+  <div class="row mb-3">
+    <div class="col-12">
+      <a href="{% url 'ventas:jadira_pendientes' %}" class="btn btn-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a Pendientes
+      </a>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Formulario de completado -->
+    <div class="col-lg-7">
+      <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+          <h4 class="mb-0">
+            <i class="bi bi-pencil-fill"></i> Completar Venta #{{ venta.id }}
+          </h4>
+        </div>
+        <div class="card-body">
+          <p class="text-muted">
+            Completa los siguientes campos para procesar la venta
+          </p>
+
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Campo SEC -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">SEC *</label>
+              {% render_field form.sec class="form-control form-control-lg" %}
+              {% if form.sec.errors %}
+              <div class="text-danger small mt-1">{{ form.sec.errors }}</div>
+              {% endif %}
+              <small class="text-muted">Ingresa el código SEC</small>
+            </div>
+
+            <!-- Campo SOT -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">SOT *</label>
+              {% render_field form.sot class="form-control form-control-lg" %}
+              {% if form.sot.errors %}
+              <div class="text-danger small mt-1">{{ form.sot.errors }}</div>
+              {% endif %}
+              <small class="text-muted">Ingresa el código SOT</small>
+            </div>
+
+            <!-- Campo Fecha de Instalación -->
+            <div class="mb-4">
+              <label class="form-label fw-bold"
+                >Fecha de Instalación Programada *</label
+              >
+              {% render_field form.fecha_instalacion_programada
+              class="form-control form-control-lg" %} {% if
+              form.fecha_instalacion_programada.errors %}
+              <div class="text-danger small mt-1">
+                {{ form.fecha_instalacion_programada.errors }}
+              </div>
+              {% endif %}
+              <small class="text-muted"
+                >Selecciona la fecha en la que se realizará la
+                instalación</small
+              >
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between">
+              <a
+                href="{% url 'ventas:jadira_pendientes' %}"
+                class="btn btn-secondary btn-lg"
+              >
+                <i class="bi bi-x-circle"></i> Cancelar
+              </a>
+              <button type="submit" class="btn btn-warning btn-lg text-dark">
+                <i class="bi bi-check-circle"></i> Completar y Enviar al Asesor
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Lateral: Datos de la venta -->
+    <div class="col-lg-5">
+      <!-- Datos del cliente -->
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-person-fill"></i> Datos de la Venta
+          </h5>
+        </div>
+        <div class="card-body">
+          <!-- Asesor -->
+          <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+            <div
+              class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
+              style="width: 45px; height: 45px; font-size: 1.2rem"
+            >
+              {{ venta.asesor.first_name|first }}{{ venta.asesor.last_name|first
+              }}
+            </div>
+            <div>
+              <h6 class="mb-0">{{ venta.asesor.get_full_name }}</h6>
+              <small class="text-muted"
+                >Asesor - {{ venta.get_modalidad_display }} / {{
+                venta.get_turno_display }}</small
+              >
+            </div>
+          </div>
+
+          <!-- Cliente -->
+          <table class="table table-borderless table-sm mb-0">
+            <tr>
+              <th class="text-muted" style="width: 40%">Cliente:</th>
+              <td>{{ venta.cliente_nombre }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">DNI:</th>
+              <td>{{ venta.cliente_dni }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Teléfono:</th>
+              <td>{{ venta.cliente_telefono }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Dirección:</th>
+              <td>{{ venta.cliente_direccion }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Género:</th>
+              <td>{{ venta.get_cliente_genero_display }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Producto:</th>
+              <td>{{ venta.producto_servicio }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Monto:</th>
+              <td>
+                <strong class="text-success">S/. {{ venta.monto }}</strong>
+              </td>
+            </tr>
+            <tr>
+              <th class="text-muted">Registrada:</th>
+              <td>{{ venta.fecha_creacion|date:"d/m/Y H:i" }}</td>
+            </tr>
+          </table>
+
+          {% if venta.observaciones %}
+          <div class="alert alert-light border mt-3 mb-0">
+            <strong><i class="bi bi-chat-left-text"></i> Observaciones:</strong>
+            <p class="small mb-0 mt-1">{{ venta.observaciones }}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Que pasa al completar -->
+      <div class="card shadow mt-3">
+        <div class="card-header bg-dark text-white">
+          <h6 class="mb-0">
+            <i class="bi bi-info-circle"></i> ¿Qué pasa al completar?
+          </h6>
+        </div>
+        <div class="card-body">
+          <div class="d-flex align-items-start mb-2">
+            <span class="badge bg-success rounded-circle me-2 mt-1">1</span>
+            <small
+              >La venta cambia a estado <strong>Pendiente Audio</strong></small
+            >
+          </div>
+          <div class="d-flex align-items-start mb-2">
+            <span class="badge bg-success rounded-circle me-2 mt-1">2</span>
+            <small
+              >El asesor
+              <strong>{{ venta.asesor.get_full_name }}</strong> recibe una
+              notificación</small
+            >
+          </div>
+          <div class="d-flex align-items-start">
+            <span class="badge bg-success rounded-circle me-2 mt-1">3</span>
+            <small
+              >El asesor podrá ver la fecha de instalación en sus ventas</small
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

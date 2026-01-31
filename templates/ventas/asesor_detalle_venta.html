@@ -1,6 +1,7 @@
 {% extends 'base.html' %} {% block title %}Detalle Venta #{{ venta.id }} - JARD
 Digital{% endblock %} {% block content %}
 <div class="container">
+  <!-- Botón Volver -->
   <div class="row mb-3">
     <div class="col-12">
       <a href="{% url 'ventas:asesor_mis_ventas' %}" class="btn btn-secondary">
@@ -10,138 +11,364 @@ Digital{% endblock %} {% block content %}
   </div>
 
   <div class="row">
+    <!-- Información Principal -->
     <div class="col-lg-8">
       <div class="card shadow">
-        <div class="card-header bg-primary text-white">
+        <!-- Header con estado -->
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
           <h4 class="mb-0">
-            <i class="bi bi-file-text"></i> Venta #{{ venta.id }} {% if
-            venta.estado == 'INSTALADA' %}
-            <span class="badge bg-success float-end"
-              >{{ venta.get_estado_display }}</span
-            >
-            {% elif venta.estado == 'RECHAZADA' %}
-            <span class="badge bg-danger float-end"
-              >{{ venta.get_estado_display }}</span
-            >
-            {% elif venta.estado == 'PENDIENTE_BO' %}
-            <span class="badge bg-warning float-end"
-              >{{ venta.get_estado_display }}</span
-            >
-            {% else %}
-            <span class="badge bg-info float-end"
-              >{{ venta.get_estado_display }}</span
-            >
-            {% endif %}
+            <i class="bi bi-file-text"></i> Venta #{{ venta.id }}
           </h4>
+          {% if venta.estado == 'PENDIENTE_BO' %}
+          <span class="badge bg-warning text-dark fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% elif venta.estado == 'PENDIENTE_AUDIO' %}
+          <span class="badge bg-info fs-6">{{ venta.get_estado_display }}</span>
+          {% elif venta.estado == 'AUDIO_REVISION' %}
+          <span class="badge bg-info fs-6">{{ venta.get_estado_display }}</span>
+          {% elif venta.estado == 'AUDIO_NO_CONFORME' %}
+          <span class="badge bg-warning text-dark fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% elif venta.estado == 'PENDIENTE_INSTALACION' %}
+          <span class="badge bg-primary fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% elif venta.estado == 'EN_EJECUCION' %}
+          <span class="badge bg-secondary fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% elif venta.estado == 'INSTALADA' %}
+          <span class="badge bg-success fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% elif venta.estado == 'RECHAZADA' %}
+          <span class="badge bg-danger fs-6"
+            >{{ venta.get_estado_display }}</span
+          >
+          {% endif %}
         </div>
+
         <div class="card-body">
-          <!-- Datos del Cliente -->
+          <!-- Seccion: Datos del Cliente -->
           <h5 class="border-bottom pb-2 mb-3">
-            <i class="bi bi-person"></i> Información del Cliente
+            <i class="bi bi-person-fill"></i> Información del Cliente
           </h5>
           <div class="row mb-4">
             <div class="col-md-6">
-              <dl class="row">
-                <dt class="col-sm-5">Nombre:</dt>
-                <dd class="col-sm-7">{{ venta.cliente_nombre }}</dd>
-
-                <dt class="col-sm-5">DNI:</dt>
-                <dd class="col-sm-7">{{ venta.cliente_dni }}</dd>
-
-                <dt class="col-sm-5">Teléfono:</dt>
-                <dd class="col-sm-7">{{ venta.cliente_telefono }}</dd>
-              </dl>
+              <table class="table table-borderless table-sm">
+                <tr>
+                  <th class="text-muted" style="width: 40%">Nombre:</th>
+                  <td>{{ venta.cliente_nombre }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted">DNI:</th>
+                  <td>{{ venta.cliente_dni }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted">Teléfono:</th>
+                  <td>{{ venta.cliente_telefono }}</td>
+                </tr>
+              </table>
             </div>
             <div class="col-md-6">
-              <dl class="row">
-                <dt class="col-sm-5">Género:</dt>
-                <dd class="col-sm-7">{{ venta.get_cliente_genero_display }}</dd>
-
-                <dt class="col-sm-5">Dirección:</dt>
-                <dd class="col-sm-7">{{ venta.cliente_direccion }}</dd>
-              </dl>
+              <table class="table table-borderless table-sm">
+                <tr>
+                  <th class="text-muted" style="width: 40%">Género:</th>
+                  <td>{{ venta.get_cliente_genero_display }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted">Dirección:</th>
+                  <td>{{ venta.cliente_direccion }}</td>
+                </tr>
+              </table>
             </div>
           </div>
 
-          <!-- Producto/Servicio -->
+          <!-- Seccion: Producto / Servicio -->
           <h5 class="border-bottom pb-2 mb-3">
-            <i class="bi bi-box"></i> Producto/Servicio
+            <i class="bi bi-box-fill"></i> Producto / Servicio
           </h5>
           <div class="row mb-4">
-            <div class="col-md-8">
-              <dl class="row">
-                <dt class="col-sm-4">Producto:</dt>
-                <dd class="col-sm-8">{{ venta.producto_servicio }}</dd>
-
-                <dt class="col-sm-4">Monto:</dt>
-                <dd class="col-sm-8">
-                  <strong class="text-success">S/ {{ venta.monto }}</strong>
-                </dd>
-              </dl>
+            <div class="col-md-6">
+              <table class="table table-borderless table-sm">
+                <tr>
+                  <th class="text-muted" style="width: 40%">Producto:</th>
+                  <td>{{ venta.producto_servicio }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted">Modalidad:</th>
+                  <td>{{ venta.get_modalidad_display }}</td>
+                </tr>
+              </table>
+            </div>
+            <div class="col-md-6">
+              <table class="table table-borderless table-sm">
+                <tr>
+                  <th class="text-muted" style="width: 40%">Monto:</th>
+                  <td>
+                    <strong class="text-success fs-5"
+                      >S/. {{ venta.monto }}</strong
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-muted">Turno:</th>
+                  <td>{{ venta.get_turno_display }}</td>
+                </tr>
+              </table>
             </div>
           </div>
 
           {% if venta.observaciones %}
-          <div class="alert alert-info">
-            <strong>Observaciones:</strong><br />
-            {{ venta.observaciones }}
+          <div class="alert alert-light border">
+            <strong><i class="bi bi-chat-left-text"></i> Observaciones:</strong>
+            <p class="mb-0 mt-1">{{ venta.observaciones }}</p>
           </div>
           {% endif %}
 
-          <!-- Datos de Back Office -->
-          {% if venta.sec or venta.sot or venta.fecha_instalacion_programada %}
-          <h5 class="border-bottom pb-2 mb-3">
-            <i class="bi bi-clipboard-check"></i> Datos de Back Office
+          <!-- Seccion: Datos completados por Back Office -->
+          {% if venta.estado != 'PENDIENTE_BO' %}
+          <h5 class="border-bottom pb-2 mb-3 mt-4">
+            <i class="bi bi-clipboard-check-fill"></i> Datos de Back Office
           </h5>
           <div class="row mb-4">
-            <div class="col-md-6">
-              <dl class="row">
-                <dt class="col-sm-4">SEC:</dt>
-                <dd class="col-sm-8">{{ venta.sec|default:"-" }}</dd>
-
-                <dt class="col-sm-4">SOT:</dt>
-                <dd class="col-sm-8">{{ venta.sot|default:"-" }}</dd>
-              </dl>
+            <div class="col-md-4">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-muted mb-1">SEC</h6>
+                  <h5 class="mb-0">{{ venta.sec|default:"—" }}</h5>
+                </div>
+              </div>
             </div>
-            <div class="col-md-6">
-              <dl class="row">
-                <dt class="col-sm-6">Fecha Instalación:</dt>
-                <dd class="col-sm-6">
-                  {% if venta.fecha_instalacion_programada %}
-                  <span class="badge bg-primary"
-                    >{{ venta.fecha_instalacion_programada|date:"d/m/Y" }}</span
-                  >
-                  {% else %} - {% endif %}
-                </dd>
-              </dl>
+            <div class="col-md-4">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-muted mb-1">SOT</h6>
+                  <h5 class="mb-0">{{ venta.sot|default:"—" }}</h5>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="text-muted mb-1">Fecha Instalación</h6>
+                  <h5 class="mb-0">
+                    {% if venta.fecha_instalacion_programada %} {{
+                    venta.fecha_instalacion_programada|date:"d/m/Y" }} {% else
+                    %} — {% endif %}
+                  </h5>
+                </div>
+              </div>
             </div>
           </div>
-          {% endif %} {% if venta.estado == 'RECHAZADA' and venta.motivo_rechazo
-          %}
-          <div class="alert alert-danger">
-            <strong><i class="bi bi-x-circle"></i> Motivo de Rechazo:</strong
-            ><br />
-            {{ venta.motivo_rechazo }}
+          {% endif %}
+
+          <!-- Seccion: Motivo de Rechazo -->
+          {% if venta.estado == 'RECHAZADA' and venta.motivo_rechazo %}
+          <div class="alert alert-danger mt-3">
+            <h6 class="alert-heading">
+              <i class="bi bi-x-circle-fill"></i> Motivo de Rechazo
+            </h6>
+            <p class="mb-0">{{ venta.motivo_rechazo }}</p>
+          </div>
+          {% endif %}
+
+          <!-- Seccion: Fecha de Instalación Real -->
+          {% if venta.fecha_instalacion_real %}
+          <div class="alert alert-success mt-3">
+            <h6 class="alert-heading">
+              <i class="bi bi-check-circle-fill"></i> Instalación Completada
+            </h6>
+            <p class="mb-0">
+              Fecha real de instalación:
+              <strong>{{ venta.fecha_instalacion_real|date:"d/m/Y" }}</strong>
+            </p>
           </div>
           {% endif %}
         </div>
       </div>
     </div>
 
-    <!-- Timeline / Historial -->
+    <!-- Panel Lateral: Historial y Info -->
     <div class="col-lg-4">
+      <!-- Timeline -->
       <div class="card shadow">
-        <div class="card-header bg-secondary text-white">
-          <h5 class="mb-0"><i class="bi bi-clock-history"></i> Historial</h5>
+        <div class="card-header bg-dark text-white">
+          <h6 class="mb-0">
+            <i class="bi bi-clock-history"></i> Historial de la Venta
+          </h6>
         </div>
         <div class="card-body">
           <div class="timeline">
+            <!-- Paso 1: Creada -->
             <div class="timeline-item">
-              <span class="badge bg-primary">Registrada</span>
+              <div class="timeline-dot bg-primary"></div>
+              <div class="timeline-content">
+                <span class="badge bg-primary">Venta Registrada</span>
+                <p class="small text-muted mb-0">
+                  {{ venta.fecha_creacion|date:"d/m/Y H:i" }}
+                </p>
+                <p class="small mb-0">Por {{ venta.asesor.get_full_name }}</p>
+              </div>
             </div>
+
+            <!-- Paso 2: Procesada por BO -->
+            {% if venta.estado != 'PENDIENTE_BO' %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-info"></div>
+              <div class="timeline-content">
+                <span class="badge bg-info">Procesada por Back Office</span>
+                <p class="small text-muted mb-0">
+                  SEC, SOT y Fecha completados
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Paso 3: Pendiente instalación -->
+            {% if venta.estado == 'PENDIENTE_INSTALACION' or venta.estado ==
+            'EN_EJECUCION' or venta.estado == 'INSTALADA' %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-primary"></div>
+              <div class="timeline-content">
+                <span class="badge bg-primary">Pendiente Instalación</span>
+                <p class="small text-muted mb-0">
+                  Fecha programada: {{
+                  venta.fecha_instalacion_programada|date:"d/m/Y" }}
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Paso 4: En ejecución -->
+            {% if venta.estado == 'EN_EJECUCION' or venta.estado == 'INSTALADA'
+            %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-secondary"></div>
+              <div class="timeline-content">
+                <span class="badge bg-secondary">En Ejecución</span>
+                <p class="small text-muted mb-0">
+                  Proceso de instalación iniciado
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Paso 5: Instalada -->
+            {% if venta.estado == 'INSTALADA' %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-success"></div>
+              <div class="timeline-content">
+                <span class="badge bg-success">Instalada</span>
+                <p class="small text-muted mb-0">
+                  {% if venta.fecha_instalacion_real %} {{
+                  venta.fecha_instalacion_real|date:"d/m/Y" }} {% endif %}
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Paso: Rechazada -->
+            {% if venta.estado == 'RECHAZADA' %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-danger"></div>
+              <div class="timeline-content">
+                <span class="badge bg-danger">Rechazada</span>
+                <p class="small text-muted mb-0">
+                  {{ venta.fecha_modificacion|date:"d/m/Y H:i" }}
+                </p>
+              </div>
+            </div>
+            {% endif %}
+
+            <!-- Paso: Audio rechazado -->
+            {% if venta.estado == 'AUDIO_NO_CONFORME' %}
+            <div class="timeline-item">
+              <div class="timeline-dot bg-warning"></div>
+              <div class="timeline-content">
+                <span class="badge bg-warning text-dark"
+                  >Audio No Conforme</span
+                >
+                <p class="small text-muted mb-0">Se requiere re-subir audio</p>
+              </div>
+            </div>
+            {% endif %}
           </div>
+        </div>
+      </div>
+
+      <!-- Información rápida -->
+      <div class="card shadow mt-3">
+        <div class="card-header bg-secondary text-white">
+          <h6 class="mb-0"><i class="bi bi-info-circle"></i> Resumen</h6>
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless table-sm mb-0">
+            <tr>
+              <th class="text-muted">Asesor:</th>
+              <td>{{ venta.asesor.get_full_name }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Modalidad:</th>
+              <td>{{ venta.get_modalidad_display }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Turno:</th>
+              <td>{{ venta.get_turno_display }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Registrado:</th>
+              <td>{{ venta.fecha_creacion|date:"d/m/Y H:i" }}</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Última mod.:</th>
+              <td>{{ venta.fecha_modificacion|date:"d/m/Y H:i" }}</td>
+            </tr>
+          </table>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Styles para el Timeline -->
+<style>
+  .timeline {
+    position: relative;
+    padding-left: 25px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #dee2e6;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .timeline-item:last-child {
+    margin-bottom: 0;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: -21px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  .timeline-content {
+    padding-left: 5px;
+  }
+</style>
+{% endblock %}

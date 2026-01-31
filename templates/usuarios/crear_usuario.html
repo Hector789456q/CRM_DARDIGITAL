@@ -1,0 +1,132 @@
+{% extends 'base.html' %} {% load widget_tweaks %} {% block title %}Crear
+Usuario - JARD Digital{% endblock %} {% block content %}
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="bi bi-person-plus"></i> Crear Usuario</h2>
+        <a href="{% url 'usuarios:lista_usuarios' %}" class="btn btn-secondary">
+          <i class="bi bi-arrow-left"></i> Volver
+        </a>
+      </div>
+
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">
+            <i class="bi bi-person-fill-add"></i> Nuevo Usuario
+          </h5>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+
+            <!-- Datos Básicos -->
+            <h6 class="border-bottom pb-2 mb-3">
+              <i class="bi bi-person"></i> Datos Básicos
+            </h6>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre de usuario *</label>
+                {% render_field form.username class="form-control" %} {% if
+                form.username.errors %}
+                <div class="text-danger small">{{ form.username.errors }}</div>
+                {% endif %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Nombre *</label>
+                {% render_field form.first_name class="form-control" %} {% if
+                form.first_name.errors %}
+                <div class="text-danger small">
+                  {{ form.first_name.errors }}
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Apellido *</label>
+                {% render_field form.last_name class="form-control" %} {% if
+                form.last_name.errors %}
+                <div class="text-danger small">{{ form.last_name.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Email</label>
+                {% render_field form.email class="form-control" %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Rol *</label>
+                {% render_field form.rol class="form-select" %} {% if
+                form.rol.errors %}
+                <div class="text-danger small">{{ form.rol.errors }}</div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Contraseña -->
+            <h6 class="border-bottom pb-2 mb-3 mt-3">
+              <i class="bi bi-lock"></i> Contraseña
+            </h6>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Contraseña *</label>
+                {% render_field form.password class="form-control" %} {% if
+                form.password.errors %}
+                <div class="text-danger small">{{ form.password.errors }}</div>
+                {% endif %}
+                <small class="text-muted">Mínimo 8 caracteres</small>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Confirmar Contraseña *</label>
+                {% render_field form.password_confirm class="form-control" %} {%
+                if form.password_confirm.errors %}
+                <div class="text-danger small">
+                  {{ form.password_confirm.errors }}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Configuración Asesor (solo visible para asesores) -->
+            <h6 class="border-bottom pb-2 mb-3 mt-3">
+              <i class="bi bi-gear"></i> Configuración
+            </h6>
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Modalidad (solo asesores)</label>
+                {% render_field form.modalidad class="form-select" %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Turno (solo asesores)</label>
+                {% render_field form.turno class="form-select" %}
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Estado</label>
+                <div class="form-check mt-2">
+                  {% render_field form.activo class="form-check-input" %}
+                  <label class="form-check-label">Usuario activo</label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="d-flex justify-content-between mt-4">
+              <a
+                href="{% url 'usuarios:lista_usuarios' %}"
+                class="btn btn-secondary"
+              >
+                <i class="bi bi-x-circle"></i> Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-person-plus"></i> Crear Usuario
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
